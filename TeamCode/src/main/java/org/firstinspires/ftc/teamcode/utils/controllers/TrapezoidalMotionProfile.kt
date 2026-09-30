@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.utils.controllers
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.seattlesolvers.solverslib.controller.PIDController
-import org.firstinspires.ftc.teamcode.utils.Angle
-import org.firstinspires.ftc.teamcode.utils.AngularAcceleration
-import org.firstinspires.ftc.teamcode.utils.AngularVelocity
-import org.firstinspires.ftc.teamcode.utils.configurations.motorControlModeConfiguration.MotorTrapezoidalModeConfiguration
+import org.firstinspires.ftc.teamcode.utils.units.Angle
+import org.firstinspires.ftc.teamcode.utils.units.AngularAcceleration
+import org.firstinspires.ftc.teamcode.utils.units.AngularVelocity
+import org.firstinspires.ftc.teamcode.utils.devices.configurations.motorControlModeConfiguration.MotorTrapezoidalModeConfiguration
 import org.firstinspires.ftc.teamcode.utils.devices.OpMotorEx
 import kotlin.math.abs
 import kotlin.math.sign
@@ -67,6 +67,10 @@ class TrapezoidalMotionProfile(val motor: OpMotorEx, val config: MotorTrapezoida
 
     fun atSetPoint(): Boolean {
         return controller.atSetPoint()
+    }
+
+    fun getPID(): PIDCoefficients {
+        return PIDCoefficients(controller.p, controller.i, controller.d)
     }
 
     /**

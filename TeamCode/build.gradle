@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+apply plugin: 'com.android.application'
+
 //
 // build.gradle in TeamCode
 //
@@ -8,21 +12,21 @@
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
 
-
 // Custom definitions may go here
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: "org.jetbrains.kotlin.kapt"
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
 
-    compileSdk 34
-    defaultConfig {
-        minSdk 24
+    kotlin {
+        compilerOptions {
+            jvmToolchain (17)
+            freeCompilerArgs.add("-Xjvm-expose-boxed")
+        }
     }
 
     packagingOptions {
@@ -30,13 +34,7 @@ android {
     }
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xjvm-expose-boxed")
-    }
 
-    jvmToolchain(17)
-}
 
 repositories {
     maven {
@@ -48,11 +46,11 @@ repositories {
     }
 
     maven {
-        url "https://repo.dairy.foundation/releases"
+        url = "https://repo.dairy.foundation/releases"
     }
 
     maven {
-        url "https://repo.dairy.foundation/snapshots"
+        url = "https://repo.dairy.foundation/snapshots"
     }
 }
 
@@ -61,21 +59,15 @@ dependencies {
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
     // SolversLib: Latest Stable Version
+    implementation "org.solverslib:core:0.3.6" // core
+    implementation "org.solverslib:pedroPathing:0.3.6" // pedroPathing
 
-    implementation "org.solverslib:core:0.3.5" // core
-    implementation "org.solverslib:pedroPathing:0.3.5" // pedroPathing
-    //    implementation "org.solverslib:photon:0.3.4" // photon is optional (see docs for more info)
-
-    implementation "com.acmerobotics.dashboard:dashboard:0.5.1" // FTC Dashboard
+    implementation "com.acmerobotics.dashboard:dashboard:0.5.1"
 
     // Pedro Pathing
-    implementation 'com.pedropathing:ftc:2.1.2'
-    implementation 'com.pedropathing:telemetry:1.0.0'
+    implementation 'com.pedropathing:revhub:3.0.1'
+    implementation 'com.pedropathing:tuning:1.0.1' // AutoTune (see Tuning.java)
 
     // Panels Dashboard
-    implementation "com.bylazar:fullpanels:1.0.12"
-
-    // PSI Kit
-    implementation 'org.psilynx.psikit:core:0.2.0'
-    implementation 'org.psilynx.psikit:ftc:0.2.0'
+    implementation "com.bylazar:fullpanels:1.0.13"
 }

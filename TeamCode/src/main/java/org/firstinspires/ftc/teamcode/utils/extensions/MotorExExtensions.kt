@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.seattlesolvers.solverslib.controller.wpilibcontroller.SimpleMotorFeedforward
 import com.seattlesolvers.solverslib.hardware.motors.Motor
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx
-import org.firstinspires.ftc.teamcode.utils.configurations.genericConfigurations.GenericMotorConfiguration
-import org.firstinspires.ftc.teamcode.utils.devices.deviceControlMode.MotorControlMode
+import org.firstinspires.ftc.teamcode.utils.devices.configurations.genericConfigurations.GenericMotorConfiguration
+import org.firstinspires.ftc.teamcode.utils.devices.controlModes.MotorControlMode
 
 fun MotorEx.setVelocityCoefficients(pidCoefficients: PIDCoefficients) {
     this.setVeloCoefficients(

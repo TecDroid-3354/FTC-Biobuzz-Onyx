@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.utils
 import com.bylazar.telemetry.PanelsTelemetry
 import com.bylazar.telemetry.TelemetryManager
 import com.pedropathing.follower.Follower
-import com.pedropathing.geometry.Pose
-import com.pedropathing.paths.PathChain
+import com.pedropathing.math.Pose
+import com.pedropathing.paths.Path
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.seattlesolvers.solverslib.command.Command
@@ -32,7 +32,17 @@ abstract class TecDroidRobot(private val telemetry: Telemetry, private val hardw
 
     abstract fun initTeleOp()
 
+    abstract fun preLoopTeleOp()
+
+    abstract fun loopTeleOp()
+
     abstract fun initAuto(startingPose: Pose)
+
+    abstract fun onEnd()
+
+    abstract fun followPathCMD(path: Path, holdEnd: Boolean, maxPower: Double): Command
+
+    abstract fun getFollower(): Follower
 
     private fun initBulkReadings() {
         super.setBulkReading(hardwareMap, LynxModule.BulkCachingMode.MANUAL)
@@ -42,13 +52,7 @@ abstract class TecDroidRobot(private val telemetry: Telemetry, private val hardw
         CommandScheduler.getInstance().run()
         OpMotorEx.updateAll()
         OpServoEx.updateAll()
+        loopTeleOp()
         printTelemetry()
-        pTelemetry.update(telemetry)
     }
-
-    abstract fun onEnd()
-
-    abstract fun followPathCMD(path: PathChain, holdEnd: Boolean, maxPower: Double): Command
-
-    abstract fun getFollower(): Follower
 }
