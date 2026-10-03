@@ -1,20 +1,20 @@
-package org.firstinspires.ftc.teamcode.subsystems.Shooter
+package org.firstinspires.ftc.teamcode.subsystems.PollenShooter
 
 import com.bylazar.configurables.annotations.Configurable
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.seattlesolvers.solverslib.controller.wpilibcontroller.SimpleMotorFeedforward
 import com.seattlesolvers.solverslib.hardware.motors.Motor
 
-object ShooterConstants {
+object PollenShooterConstants {
 
     object identification {
-        val shooterMotorId = "shooterMotor"
+        val pollenShooterMotorId = "pollenShooterMotor"
     }
 
     object configuration {
-        val isSooterMotorInverted = false //Update later pls
-        val shooterMotorMode = Motor.RunMode.VelocityControl //Change mode to RawPower
-        val shooterMotorZeroBeheavior = Motor.ZeroPowerBehavior.FLOAT
+        val isPollenShooterMotorInverted = false //Update later pls
+        val PollenShooterMotorMode = Motor.RunMode.VelocityControl //Change mode to RawPower after testing
+        val pollenShooterMotorZeroBeheavior = Motor.ZeroPowerBehavior.FLOAT
     }
 
     @Configurable
