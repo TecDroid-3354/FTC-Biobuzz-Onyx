@@ -1,19 +1,33 @@
 package org.firstinspires.ftc.teamcode
 
+import ShooterHood
 import com.pedropathing.follower.Follower
 import com.pedropathing.math.Pose
 import com.pedropathing.paths.Path
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.seattlesolvers.solverslib.command.Command
-import com.seattlesolvers.solverslib.command.RunCommand
+import com.seattlesolvers.solverslib.command.SequentialCommandGroup
+import com.seattlesolvers.solverslib.command.WaitCommand
 import com.seattlesolvers.solverslib.gamepad.GamepadEx
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.Constants
+import org.firstinspires.ftc.teamcode.subsystems.FlowerHood.FlowerHood
+import org.firstinspires.ftc.teamcode.subsystems.Indexer.Indexer
+import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake
+import org.firstinspires.ftc.teamcode.subsystems.Shooter.Shooter
+import org.firstinspires.ftc.teamcode.subsystems.PollenShooterCover.ShooterCover
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.Mecanum
 import org.firstinspires.ftc.teamcode.utils.Alliance
 import org.firstinspires.ftc.teamcode.utils.TecDroidRobot
 import org.firstinspires.ftc.teamcode.utils.autonomous.PoseStorage
+import org.firstinspires.ftc.teamcode.utils.extensions.dpadDown
+import org.firstinspires.ftc.teamcode.utils.extensions.dpadUp
+import org.firstinspires.ftc.teamcode.utils.extensions.leftBumper
+import org.firstinspires.ftc.teamcode.utils.extensions.leftTrigger
+import org.firstinspires.ftc.teamcode.utils.extensions.onFalse
+import org.firstinspires.ftc.teamcode.utils.extensions.onTrue
+import org.firstinspires.ftc.teamcode.utils.extensions.rightTrigger
 
 class Robot(
     private val alliance: Alliance,
@@ -25,6 +39,13 @@ class Robot(
     /* Declare your Pedro Pathing's Follower here */
     private lateinit var follower: Follower
     /* Declare your subsystems here */
+
+    private lateinit var flowerHood : FlowerHood
+    private lateinit var indexer : Indexer
+    private lateinit var intake: Intake
+    private lateinit var shooter: Shooter
+    private lateinit var shooterCover: ShooterCover
+    private lateinit var shooterHood : ShooterHood
 
     private lateinit var otos : SparkFunOTOS
     private lateinit var drive: Mecanum
@@ -38,6 +59,13 @@ class Robot(
         // Follower initialization
         follower = Constants.createFollower(hardwareMap)
         // Subsystem initialization
+        flowerHood = FlowerHood(hardwareMap)
+        indexer = Indexer(hardwareMap)
+        intake = Intake(hardwareMap)
+        shooter = Shooter(hardwareMap)
+        shooterCover = ShooterCover(hardwareMap)
+        shooterHood = ShooterHood(hardwareMap)
+
         drive = Mecanum(follower, controller, alliance)
 
         otos = hardwareMap.get(SparkFunOTOS::class.java,"otos")
@@ -52,6 +80,47 @@ class Robot(
         drive.setPose(PoseStorage.autonomousEndPose)
         drive.defaultCommand = drive.driveFollowingDriverInput()
         // Build Commands:
+
+        controller.dpadUp()
+            .onTrue(flowerHood.openCMD())
+        controller.dpadDown()
+            .onTrue(flowerHood.closedCMD())
+
+        controller.rightTrigger()
+            .onTrue(SequentialCommandGroup(
+                shooterHood.moveHoodToPositionCMD(),
+                shooterCover.openShooterCoverCMD(),
+                WaitCommand(500),
+                shooter.shootCMD(),
+                indexer.enableIndexerCMD()
+            ))
+            .onFalse(SequentialCommandGroup(
+                indexer.disableIndexerCMD(),
+                shooter.stopShooterCMD(),
+                WaitCommand(200),
+                shooterCover.closeShooterCoverCMD(),
+                shooterHood.moveHoodDownPositionCMD()
+            ))
+
+        controller.leftTrigger()
+            .onTrue(SequentialCommandGroup(
+                indexer.enableIndexerCMD(),
+                //here is the enable intake, but Diego hasn't finished
+            ))
+            .onFalse(SequentialCommandGroup(
+                indexer.disableIndexerCMD(),
+                //here is the disable intake, but Diego hasn't finished
+            ))
+
+        controller.leftBumper()
+            .onTrue(SequentialCommandGroup(
+                indexer.reverseIndexerCMD(),
+                //here is the reverse intake, but Diego hasn't finished
+            ))
+            .onFalse(SequentialCommandGroup(
+                indexer.disableIndexerCMD(),
+                //here is the disable intake, but Diego hasn't finished
+            ))
     }
 
     override fun preLoopTeleOp() {
