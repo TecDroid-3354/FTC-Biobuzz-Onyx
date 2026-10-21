@@ -29,6 +29,7 @@ class Indexer(hardwareMap: HardwareMap) {
         indexerMotor.set(-1.0)
     }
 
+<<<<<<< HEAD
     fun enableIndexerCMD (): Command {
         return InstantCommand({enableIndexer()})
     }
@@ -38,6 +39,16 @@ class Indexer(hardwareMap: HardwareMap) {
     }
 
     fun reverseIndexerCMD (): Command {
+=======
+    fun enableIndexerCMD(): Command {
+        return InstantCommand({enableIndexer()})
+    }
+    fun disableIndexerCMD(): Command {
+        return InstantCommand({disableIndexer()})
+    }
+
+    fun reverseIntakeCMD(): Command {
+>>>>>>> 34ccf0f4f77a138c91f6bef2a0379ae4aa723d2c
         return InstantCommand({reverseIndexer()})
     }
 }

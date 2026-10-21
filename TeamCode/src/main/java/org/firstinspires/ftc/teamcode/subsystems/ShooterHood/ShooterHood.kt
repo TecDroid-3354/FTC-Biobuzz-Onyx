@@ -57,4 +57,4 @@ class ShooterHood(hardwareMap: HardwareMap) {
     fun moveHoodDownPositionCMD(): Command{
         return InstantCommand({moveHoodDownPosition()})
     }
-    }
+}

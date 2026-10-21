@@ -105,21 +105,21 @@ class Robot(
         controller.leftTrigger()
             .onTrue(SequentialCommandGroup(
                 indexer.enableIndexerCMD(),
-                //here is the enable intake, but Diego hasn't finished
+                intake.enableIntakeCMD()
             ))
             .onFalse(SequentialCommandGroup(
                 indexer.disableIndexerCMD(),
-                //here is the disable intake, but Diego hasn't finished
+                intake.disableIntakeCMD()
             ))
 
         controller.leftBumper()
             .onTrue(SequentialCommandGroup(
                 indexer.reverseIndexerCMD(),
-                //here is the reverse intake, but Diego hasn't finished
+                intake.reverseIntakeCMD()
             ))
             .onFalse(SequentialCommandGroup(
                 indexer.disableIndexerCMD(),
-                //here is the disable intake, but Diego hasn't finished
+                intake.disableIntakeCMD()
             ))
     }
 
