@@ -12,9 +12,10 @@ import com.seattlesolvers.solverslib.command.WaitCommand
 import com.seattlesolvers.solverslib.gamepad.GamepadEx
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.Constants
-import org.firstinspires.ftc.teamcode.subsystems.FlowerHood.FlowerHood
+import org.firstinspires.ftc.teamcode.subsystems.Feeder.Feeder
 import org.firstinspires.ftc.teamcode.subsystems.Indexer.Indexer
 import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake
+import org.firstinspires.ftc.teamcode.subsystems.Pata.Pata
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.Shooter
 import org.firstinspires.ftc.teamcode.subsystems.PollenShooterCover.ShooterCover
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.Mecanum
@@ -40,12 +41,13 @@ class Robot(
     private lateinit var follower: Follower
     /* Declare your subsystems here */
 
-    private lateinit var flowerHood : FlowerHood
     private lateinit var indexer : Indexer
     private lateinit var intake: Intake
     private lateinit var shooter: Shooter
     private lateinit var shooterCover: ShooterCover
     private lateinit var shooterHood : ShooterHood
+    private lateinit var feeder: Feeder
+    private lateinit var pata: Pata
 
     private lateinit var otos : SparkFunOTOS
     private lateinit var drive: Mecanum
@@ -59,12 +61,13 @@ class Robot(
         // Follower initialization
         follower = Constants.createFollower(hardwareMap)
         // Subsystem initialization
-        flowerHood = FlowerHood(hardwareMap)
         indexer = Indexer(hardwareMap)
         intake = Intake(hardwareMap)
         shooter = Shooter(hardwareMap)
         shooterCover = ShooterCover(hardwareMap)
         shooterHood = ShooterHood(hardwareMap)
+        feeder = Feeder(hardwareMap)
+        pata = Pata(hardwareMap)
 
         drive = Mecanum(follower, controller, alliance)
 
@@ -82,9 +85,9 @@ class Robot(
         // Build Commands:
 
         controller.dpadUp()
-            .onTrue(flowerHood.openCMD())
+            .onTrue(pata.risePataCMD())
         controller.dpadDown()
-            .onTrue(flowerHood.closedCMD())
+            .onTrue(pata.lowerPataCMD())
 
         controller.rightTrigger()
             .onTrue(SequentialCommandGroup(
@@ -92,10 +95,12 @@ class Robot(
                 shooterCover.openShooterCoverCMD(),
                 WaitCommand(500),
                 shooter.shootCMD(),
+                feeder.feedCMD(),
                 indexer.enableIndexerCMD()
             ))
             .onFalse(SequentialCommandGroup(
                 indexer.disableIndexerCMD(),
+                feeder.stopFeedingCMD(),
                 shooter.stopShooterCMD(),
                 WaitCommand(200),
                 shooterCover.closeShooterCoverCMD(),
@@ -114,10 +119,12 @@ class Robot(
 
         controller.leftBumper()
             .onTrue(SequentialCommandGroup(
+                feeder.removeCMD(),
                 indexer.reverseIndexerCMD(),
                 intake.reverseIntakeCMD()
             ))
             .onFalse(SequentialCommandGroup(
+                feeder.stopFeedingCMD(),
                 indexer.disableIndexerCMD(),
                 intake.disableIntakeCMD()
             ))
