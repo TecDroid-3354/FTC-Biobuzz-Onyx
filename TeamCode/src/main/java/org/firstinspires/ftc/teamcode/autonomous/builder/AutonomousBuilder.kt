@@ -5,8 +5,13 @@ import com.seattlesolvers.solverslib.command.CommandOpMode
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup
 import com.seattlesolvers.solverslib.command.ParallelDeadlineGroup
 import com.seattlesolvers.solverslib.command.InstantCommand
+import com.seattlesolvers.solverslib.command.WaitCommand
 import com.seattlesolvers.solverslib.gamepad.GamepadEx
 import org.firstinspires.ftc.teamcode.Robot
+import org.firstinspires.ftc.teamcode.autonomous.paths.TestPath
+import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake
+import org.firstinspires.ftc.teamcode.subsystems.Pata.Pata
+import org.firstinspires.ftc.teamcode.subsystems.Shooter.Shooter
 import org.firstinspires.ftc.teamcode.utils.Alliance
 
 /**
@@ -25,8 +30,11 @@ open class AutonomousBuilder(private val alliance: Alliance): CommandOpMode() {
     private lateinit var controller: GamepadEx
     // Robot's declaration
     private lateinit var robot: Robot
-    // TODO Declare an instance of your org.firstinspires.ftc.teamcode.autonomous.paths.examplePaths.Paths class
+    private lateinit var paths: TestPath
 
+    private lateinit var shooter: Shooter
+    private lateinit var intake: Intake
+    private lateinit var pata: Pata
     // Autonomous command declaration
     private lateinit var autonomousCommand: SequentialCommandGroup
 
@@ -35,15 +43,43 @@ open class AutonomousBuilder(private val alliance: Alliance): CommandOpMode() {
         super.reset()
         controller = GamepadEx(gamepad1)
         robot = Robot(alliance, hardwareMap, controller, telemetry)
-        // TODO Initialize the instance of your org.firstinspires.ftc.teamcode.autonomous.paths.examplePaths.Paths class
-
-        // TODO Set starting pose based on the autonomous to follow
-        robot.initAuto(Pose(0.0, 0.0))
+        paths = TestPath(alliance)
+        robot.initAuto(paths.start)
 
         // Chain commands inside the autonomous command //
         // TODO IMPORTANT. Fill out the requirements of each command nested in here, if not, the robot won't follow any path.
         autonomousCommand = SequentialCommandGroup(
-            // TODO Write here your commands
+            robot.followPathCMD(paths.path1(),true,.9),
+            shooter.shootCMD(),
+            WaitCommand(1000),
+            shooter.stopShooterCMD(),
+            robot.followPathCMD(paths.path2(),false,.9),
+            intake.enableIntakeCMD(),
+            robot.followPathCMD(paths.path3(),false,.9),
+            intake.disableIntakeCMD(),
+            robot.followPathCMD(paths.path4(),false,.9),
+            robot.followPathCMD(paths.path5(),false,.9),
+            robot.followPathCMD(paths.path5(),true,.9),
+            robot.followPathCMD(paths.path6(),false,.9),
+            shooter.shootCMD(),
+            WaitCommand(1000),
+            shooter.stopShooterCMD(),
+            robot.followPathCMD(paths.path7(),true,.9),
+            pata.lowerPataCMD(),
+            intake.enableIntakeCMD(),
+            WaitCommand(1000),
+            intake.disableIntakeCMD(),
+            pata.risePataCMD(),
+            robot.followPathCMD(paths.path8(),false,.9),
+            robot.followPathCMD(paths.path9(),true,.9),
+            shooter.shootCMD(),
+            WaitCommand(1000),
+            shooter.stopShooterCMD(),
+            robot.followPathCMD(paths.path10(),true,.9),
+            robot.followPathCMD(paths.path11(),false,.9),
+            robot.followPathCMD(paths.path12(),false,.9),
+            robot.followPathCMD(paths.path13(),false,.9),
+
         )
 
         // Wait for start to schedule command

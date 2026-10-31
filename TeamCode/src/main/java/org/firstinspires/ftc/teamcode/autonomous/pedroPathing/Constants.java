@@ -40,16 +40,12 @@ public class Constants {
             Optional.of(0.99)
     );
 
-    public static OTOSConfig otosConfig = new OTOSConfig(
-            config -> {
-                config.name.set("otos");
-                config.linearScalar.set(0.9566575);
-                config.angularScalar.set(0.99374875);
-                config.offset.set(new Pose(0.75, 0.0, Math.PI/2));
-            }
+    public static PinpointConfig localizerConfig = PedroPathing.INSTANCE.createPinpointConfig(
+            Optional.of(GoBildaPinpointDriver.EncoderDirection.FORWARD),
+            Optional.of(GoBildaPinpointDriver.EncoderDirection.FORWARD),
+            Optional.of(Distance.fromInches(3.225225613811823)),
+            Optional.of(Distance.fromInches(-6.087658499169537))
     );
-
-
 
     public static ForesightConfig foresightConfig = PedroPathing.INSTANCE.createForesightConfig(
             Optional.of(LinearVelocity.fromInps(76.35614907285614)),
@@ -68,9 +64,10 @@ public class Constants {
             Optional.of(Controller.proportional(0.15695924468887693))
     );
 
+
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new Follower(
-                new OTOSLocalizer(hardwareMap, otosConfig),
+                new PinpointLocalizer(hardwareMap, localizerConfig),
                 new Mecanum(hardwareMap, drivetrainConfig),
                 new Foresight(foresightConfig)
         );
