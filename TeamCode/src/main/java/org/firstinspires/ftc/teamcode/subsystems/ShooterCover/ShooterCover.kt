@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.PollenShooterCover
+package org.firstinspires.ftc.teamcode.subsystems.ShooterCover
 
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.seattlesolvers.solverslib.command.Command

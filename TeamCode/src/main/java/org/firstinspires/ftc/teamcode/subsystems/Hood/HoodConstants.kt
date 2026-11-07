@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.subsystems.ShooterHood
+package org.firstinspires.ftc.teamcode.subsystems.Hood
 
-object ShooterHoodConstants {
+object HoodConstants {
 
     object Identification {
-        val shooterHoodServoId = "shooterHoodServo"
+        val hoodServoId = "shooterHoodServo"
     }
 
     object PhysicalLimits {
@@ -12,6 +12,6 @@ object ShooterHoodConstants {
         val maxAngle = 30.0 * gearRatio
     }
     object Configuration {
-        val isShooterHoodServoInverted = false
+        val isHoodServoInverted = false
     }
 }

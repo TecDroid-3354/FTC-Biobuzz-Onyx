@@ -21,6 +21,10 @@ object ShooterConstants {
         val shooterMotor2ZeroBeheavior = Motor.ZeroPowerBehavior.FLOAT
     }
 
+    object Interpolation {
+
+    }
+
     @Configurable
 
     object Tunables {

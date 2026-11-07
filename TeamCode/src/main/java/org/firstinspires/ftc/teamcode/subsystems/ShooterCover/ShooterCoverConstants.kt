@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.PollenShooterCover
+package org.firstinspires.ftc.teamcode.subsystems.ShooterCover
 
 object ShooterCoverConstants {
 

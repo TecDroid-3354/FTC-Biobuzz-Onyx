@@ -4,19 +4,19 @@ import com.seattlesolvers.solverslib.command.Command
 import com.seattlesolvers.solverslib.command.InstantCommand
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx
 import com.seattlesolvers.solverslib.util.InterpLUT
-import org.firstinspires.ftc.teamcode.subsystems.ShooterHood.ShooterHoodConstants
+import org.firstinspires.ftc.teamcode.subsystems.Hood.HoodConstants
 
 
-class ShooterHood(hardwareMap: HardwareMap) {
+class Hood(hardwareMap: HardwareMap) {
 
-    private val shooterHoodServo: ServoEx
+    private val hoodServo: ServoEx
     val interpolation = InterpLUT()
     var distance = 10.0
 
     init {
-        shooterHoodServo = ServoEx(hardwareMap, ShooterHoodConstants.Identification.shooterHoodServoId)
+        hoodServo = ServoEx(hardwareMap, HoodConstants.Identification.hoodServoId)
 
-        shooterHoodServo.setInverted(ShooterHoodConstants.Configuration.isShooterHoodServoInverted)
+        hoodServo.setInverted(HoodConstants.Configuration.isHoodServoInverted)
 
         interpolation.add(0.0,5.0)
         interpolation.add(1.0,6.0)
@@ -38,12 +38,12 @@ class ShooterHood(hardwareMap: HardwareMap) {
 
         var targetPosition = interpolation.get(distance)
 
-        targetPosition = targetPosition * ShooterHoodConstants.PhysicalLimits.gearRatio
+        targetPosition = targetPosition * HoodConstants.PhysicalLimits.gearRatio
 
-        targetPosition = MathUtils.clamp(targetPosition, ShooterHoodConstants.PhysicalLimits.minAngle,
-            ShooterHoodConstants.PhysicalLimits.maxAngle)
+        targetPosition = MathUtils.clamp(targetPosition, HoodConstants.PhysicalLimits.minAngle,
+            HoodConstants.PhysicalLimits.maxAngle)
 
-        shooterHoodServo.set(targetPosition)
+        hoodServo.set(targetPosition)
     }
 
     fun moveHoodToPositionCMD(): Command {
@@ -51,7 +51,7 @@ class ShooterHood(hardwareMap: HardwareMap) {
 
     }
         fun moveHoodDownPosition() {
-            shooterHoodServo.set(ShooterHoodConstants.PhysicalLimits.minAngle)
+            hoodServo.set(HoodConstants.PhysicalLimits.minAngle)
         }
 
     fun moveHoodDownPositionCMD(): Command{

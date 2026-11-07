@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode
 
-import ShooterHood
+import Hood
 import com.pedropathing.follower.Follower
 import com.pedropathing.math.Pose
 import com.pedropathing.paths.Path
@@ -17,7 +17,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Indexer.Indexer
 import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake
 import org.firstinspires.ftc.teamcode.subsystems.Pata.Pata
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.Shooter
-import org.firstinspires.ftc.teamcode.subsystems.PollenShooterCover.ShooterCover
+import org.firstinspires.ftc.teamcode.subsystems.ShooterCover.ShooterCover
+import org.firstinspires.ftc.teamcode.subsystems.Vision.Limelight
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.Mecanum
 import org.firstinspires.ftc.teamcode.utils.Alliance
 import org.firstinspires.ftc.teamcode.utils.TecDroidRobot
@@ -45,12 +46,14 @@ class Robot(
     private lateinit var intake: Intake
     private lateinit var shooter: Shooter
     private lateinit var shooterCover: ShooterCover
-    private lateinit var shooterHood : ShooterHood
+    private lateinit var hood : Hood
     private lateinit var feeder: Feeder
     private lateinit var pata: Pata
 
     private lateinit var otos : SparkFunOTOS
     private lateinit var drive: Mecanum
+
+    private lateinit var vision: Limelight
 
     init {
         subsystemInitialization()
@@ -65,11 +68,12 @@ class Robot(
         intake = Intake(hardwareMap)
         shooter = Shooter(hardwareMap)
         shooterCover = ShooterCover(hardwareMap)
-        shooterHood = ShooterHood(hardwareMap)
+        hood = Hood(hardwareMap)
         feeder = Feeder(hardwareMap)
         pata = Pata(hardwareMap)
 
         drive = Mecanum(follower, controller, alliance)
+        vision = Limelight(hardwareMap)
 
         otos = hardwareMap.get(SparkFunOTOS::class.java,"otos")
     }
@@ -91,7 +95,7 @@ class Robot(
 
         controller.rightTrigger()
             .onTrue(SequentialCommandGroup(
-                shooterHood.moveHoodToPositionCMD(),
+                hood.moveHoodToPositionCMD(),
                 shooterCover.openShooterCoverCMD(),
                 WaitCommand(500),
                 shooter.shootCMD(),
@@ -104,7 +108,7 @@ class Robot(
                 shooter.stopShooterCMD(),
                 WaitCommand(200),
                 shooterCover.closeShooterCoverCMD(),
-                shooterHood.moveHoodDownPositionCMD()
+                hood.moveHoodDownPositionCMD()
             ))
 
         controller.leftTrigger()
@@ -134,6 +138,7 @@ class Robot(
         /**
          * Runs once before the main loop of the robot [loopTeleOp]
          */
+        vision.start()
     }
 
     /**
@@ -147,6 +152,7 @@ class Robot(
      */
     override fun initAuto(startingPose: Pose) {
         drive.setPose(startingPose)
+        vision.start()
     }
 
     /**
