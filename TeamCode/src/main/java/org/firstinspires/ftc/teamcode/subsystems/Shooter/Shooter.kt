@@ -5,12 +5,17 @@ import com.seattlesolvers.solverslib.command.Command
 import com.seattlesolvers.solverslib.command.InstantCommand
 import com.seattlesolvers.solverslib.command.RunCommand
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx
+import com.seattlesolvers.solverslib.util.InterpLUT
+import com.seattlesolvers.solverslib.util.get
 import org.firstinspires.ftc.teamcode.utils.units.AngularVelocity
+import org.firstinspires.ftc.teamcode.utils.units.Distance
 
 class Shooter (hardwareMap: HardwareMap) {
 
     private val shooterMotor1: MotorEx
     private val shooterMotor2: MotorEx
+
+    private val interpolation: InterpLUT
 
 
     init {
@@ -24,11 +29,33 @@ class Shooter (hardwareMap: HardwareMap) {
         shooterMotor2.setInverted(ShooterConstants.configuration.isShooterMotor2Inverted)
         shooterMotor2.setRunMode(ShooterConstants.configuration.shooterMotor2Mode)
         shooterMotor2.setZeroPowerBehavior(ShooterConstants.configuration.shooterMotor2ZeroBeheavior)
+
+        interpolation = InterpLUT()
+
+
+        interpolation.add(0.0,5.0)
+        interpolation.add(1.0,6.0)
+        interpolation.add(2.0,7.0)
+        interpolation.add(3.0,8.0)
+        interpolation.add(4.0,9.0)
+        interpolation.add(5.0,10.0)
+        interpolation.add(6.0,11.0)
+        interpolation.add(7.0,12.0)
+        interpolation.add(8.0,13.0)
+        interpolation.add(9.0,14.0)
+        interpolation.add(10.0,15.0)
+
+        interpolation.createLUT()
     }
 
-    fun shootPollen () {
+    fun shoot () {
         shooterMotor1.velocity = 28 * 5000.0
         shooterMotor2.velocity = 28 * 5000.0
+    }
+
+    fun shootWithLimelight (distance: Double) {
+        shooterMotor1.setVelocity(interpolation.get(distance))
+        shooterMotor2.setVelocity(interpolation.get(distance))
     }
 
     fun calibrateShooter(velocity: AngularVelocity) {
@@ -52,7 +79,7 @@ class Shooter (hardwareMap: HardwareMap) {
 
 
     fun shootCMD(): Command {
-        return InstantCommand({shootPollen()})
+        return InstantCommand({shoot()})
     }
 
     fun setShooterVelocityCMD(velocity: AngularVelocity): Command {
@@ -61,6 +88,10 @@ class Shooter (hardwareMap: HardwareMap) {
 
     fun stopShooterCMD(): Command {
         return InstantCommand({stopShooter()})
+    }
+
+    fun shootWithLimelightCMD(distance: Double): Command {
+        return InstantCommand({shootWithLimelight(distance)})
     }
 
 

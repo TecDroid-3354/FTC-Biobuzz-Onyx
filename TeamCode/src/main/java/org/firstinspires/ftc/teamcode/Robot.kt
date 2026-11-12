@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake
 import org.firstinspires.ftc.teamcode.subsystems.Pata.Pata
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.Shooter
 import org.firstinspires.ftc.teamcode.subsystems.ShooterCover.ShooterCover
-import org.firstinspires.ftc.teamcode.subsystems.Vision.Limelight
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.Mecanum
+import org.firstinspires.ftc.teamcode.subsystems.vision.Limelight
 import org.firstinspires.ftc.teamcode.utils.Alliance
 import org.firstinspires.ftc.teamcode.utils.TecDroidRobot
 import org.firstinspires.ftc.teamcode.utils.autonomous.PoseStorage
@@ -30,12 +30,14 @@ import org.firstinspires.ftc.teamcode.utils.extensions.leftTrigger
 import org.firstinspires.ftc.teamcode.utils.extensions.onFalse
 import org.firstinspires.ftc.teamcode.utils.extensions.onTrue
 import org.firstinspires.ftc.teamcode.utils.extensions.rightTrigger
+import org.firstinspires.ftc.teamcode.utils.units.Angle
+import kotlin.arrayOf
 
 class Robot(
     private val alliance: Alliance,
     private val hardwareMap: HardwareMap,
     private val controller: GamepadEx,
-    telemetry: Telemetry
+    private val telemetry: Telemetry
 ): TecDroidRobot(telemetry, hardwareMap) {
 
     /* Declare your Pedro Pathing's Follower here */
@@ -55,6 +57,12 @@ class Robot(
 
     private lateinit var vision: Limelight
 
+    var allianceForAprilTags = when (alliance) {
+        Alliance.RED -> intArrayOf(30, 31, 32, 33, 34, 35, 36, 37)
+        Alliance.BLUE -> intArrayOf(38, 39, 40, 41, 42, 43, 44, 45)
+        else -> intArrayOf()
+    }
+
     init {
         subsystemInitialization()
     }
@@ -73,7 +81,7 @@ class Robot(
         pata = Pata(hardwareMap)
 
         drive = Mecanum(follower, controller, alliance)
-        vision = Limelight(hardwareMap)
+        vision = Limelight (hardwareMap, telemetry) { Angle.fromDegrees(drive.getRotation().degrees) }
 
         otos = hardwareMap.get(SparkFunOTOS::class.java,"otos")
     }
@@ -98,7 +106,7 @@ class Robot(
                 hood.moveHoodToPositionCMD(),
                 shooterCover.openShooterCoverCMD(),
                 WaitCommand(500),
-                shooter.shootCMD(),
+                shooter.shootWithLimelightCMD(vision.getDistanceToGoal(allianceForAprilTags).inches),
                 feeder.feedCMD(),
                 indexer.enableIndexerCMD()
             ))
