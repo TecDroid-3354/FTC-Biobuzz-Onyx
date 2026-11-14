@@ -5,6 +5,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.seattlesolvers.solverslib.command.SubsystemBase
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.teamcode.Robot
 import org.firstinspires.ftc.teamcode.subsystems.Vision.LimelightConstants
 import org.firstinspires.ftc.teamcode.utils.Alliance
 import org.firstinspires.ftc.teamcode.utils.units.Angle
@@ -17,6 +18,8 @@ class Limelight(
     val telemetry: Telemetry,
     val rotationSupplier: Supplier<Angle>
 ) : SubsystemBase() {
+
+    lateinit var robot: Robot
 
     private var limelight: Limelight3A? = null
     var llResult: LLResult? = null
@@ -126,6 +129,11 @@ class Limelight(
 
     fun pause(): Runnable {
         return {limelight!!.pause()}
+    }
+
+    fun visionTelemetry(telemetry: Telemetry, filterArray: IntArray) {
+        telemetry.addData("Robot's Distance to hive",
+            getDistanceToGoal(filterArray))
     }
 
 }

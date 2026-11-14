@@ -67,14 +67,17 @@ class Shooter (hardwareMap: HardwareMap) {
         shooterMotor1.set(0.0)
         shooterMotor2.set(0.0)
     }
-    //this will not have CMD because we are going to return the shooter's velocity to print it
+
     fun getShooterMotor1Velocity(): AngularVelocity {
         return AngularVelocity.fromRps(shooterMotor1.velocity/28)//Change formula to solve gear ratio
     }
 
-    //this will not have CMD because we are going to return the shooter's velocity to print it
     fun getShooterMotor2Velocity(): AngularVelocity {
         return AngularVelocity.fromRps(shooterMotor2.velocity/28)//Change formula to solve gear ratio
+    }
+
+    fun getShooterVelocity(): AngularVelocity {
+        return AngularVelocity.fromRps(((shooterMotor1.velocity/28)+(shooterMotor2.velocity/28))/2)
     }
 
 
@@ -93,6 +96,5 @@ class Shooter (hardwareMap: HardwareMap) {
     fun shootWithLimelightCMD(distance: Double): Command {
         return InstantCommand({shootWithLimelight(distance)})
     }
-
 
 }

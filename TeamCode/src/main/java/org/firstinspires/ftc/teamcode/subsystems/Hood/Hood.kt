@@ -5,6 +5,7 @@ import com.seattlesolvers.solverslib.command.InstantCommand
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx
 import com.seattlesolvers.solverslib.util.InterpLUT
 import org.firstinspires.ftc.teamcode.subsystems.Hood.HoodConstants
+import org.firstinspires.ftc.teamcode.utils.units.Angle
 
 
 class Hood(hardwareMap: HardwareMap) {
@@ -44,6 +45,10 @@ class Hood(hardwareMap: HardwareMap) {
             HoodConstants.PhysicalLimits.maxAngle)
 
         hoodServo.set(targetPosition)
+    }
+
+    fun getHoodsAngle (): Angle {
+        return Angle.fromDegrees(hoodServo.get())
     }
 
     fun moveHoodToPositionCMD(): Command {
