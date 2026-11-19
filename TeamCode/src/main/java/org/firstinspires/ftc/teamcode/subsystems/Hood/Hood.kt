@@ -6,6 +6,7 @@ import com.seattlesolvers.solverslib.hardware.servos.ServoEx
 import com.seattlesolvers.solverslib.util.InterpLUT
 import org.firstinspires.ftc.teamcode.subsystems.Hood.HoodConstants
 import org.firstinspires.ftc.teamcode.utils.units.Angle
+import org.firstinspires.ftc.teamcode.utils.units.Distance
 
 
 class Hood(hardwareMap: HardwareMap) {
@@ -34,25 +35,16 @@ class Hood(hardwareMap: HardwareMap) {
         interpolation.createLUT()
 
     }
-    fun moveHoodToPosition() {
-        distance = 10.0
-
-        var targetPosition = interpolation.get(distance)
-
-        targetPosition = targetPosition * HoodConstants.PhysicalLimits.gearRatio
-
-        targetPosition = MathUtils.clamp(targetPosition, HoodConstants.PhysicalLimits.minAngle,
-            HoodConstants.PhysicalLimits.maxAngle)
-
-        hoodServo.set(targetPosition)
+    fun moveHoodToPosition(distance: Double){
+        hoodServo.set(interpolation.get(distance))
     }
 
     fun getHoodsAngle (): Angle {
         return Angle.fromDegrees(hoodServo.get())
     }
 
-    fun moveHoodToPositionCMD(): Command {
-        return InstantCommand({moveHoodDownPosition()})
+    fun moveHoodToPositionCMD(distance: Double): Command {
+        return InstantCommand({moveHoodToPosition(distance)})
 
     }
         fun moveHoodDownPosition() {

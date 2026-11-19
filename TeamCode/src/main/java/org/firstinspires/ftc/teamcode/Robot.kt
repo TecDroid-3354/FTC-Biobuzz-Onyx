@@ -105,7 +105,7 @@ class Robot(
 
         controller.rightTrigger()
             .onTrue(SequentialCommandGroup(
-                hood.moveHoodToPositionCMD(),
+                hood.moveHoodToPositionCMD(vision.getDistanceToGoal(allianceForAprilTags).inches),
                 shooterCover.openShooterCoverCMD(),
                 WaitCommand(500),
                 shooter.shootWithLimelightCMD(vision.getDistanceToGoal(allianceForAprilTags).inches),

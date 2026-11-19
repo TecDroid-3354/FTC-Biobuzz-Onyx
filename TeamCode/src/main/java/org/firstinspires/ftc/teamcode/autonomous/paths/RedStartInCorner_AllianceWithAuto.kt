@@ -5,13 +5,14 @@ import com.pedropathing.api.Paths
 import com.pedropathing.api.PoseFactory
 import com.pedropathing.math.Pose
 import com.pedropathing.paths.Path
+import org.firstinspires.ftc.teamcode.utils.Alliance
 
-class RedStartInCorner_AllianceWithAuto {
+class RedStartInCorner_AllianceWithAuto(alliance: Alliance) {
 
 
     private val poseFactory = PoseFactory.degrees()
 
-    private val start = poseFactory.of(8.7349, 132.071, 0.0)
+    val start = poseFactory.of(8.7349, 132.071, 0.0)
     private val point1 = poseFactory.of(8.7349, 132.1211, 0.0)
     private val point2Start = poseFactory.of(8.7349, 132.1211, 0.0)
     private val point2 = poseFactory.of(58.1952, 118.1628, -90.0)
