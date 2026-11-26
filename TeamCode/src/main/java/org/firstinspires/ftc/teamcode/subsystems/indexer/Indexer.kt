@@ -7,20 +7,14 @@ import com.seattlesolvers.solverslib.hardware.motors.CRServoEx
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx
 
 class Indexer(hardwareMap: HardwareMap) {
-    private val indexerMotor : MotorEx
 
     private val leftIndServo : CRServoEx
     private val rightIndServo : CRServoEx
 
 
     init {
-        indexerMotor = MotorEx(hardwareMap, IndexerConstants.identification.indexerMotorId)
         leftIndServo = CRServoEx(hardwareMap, IndexerConstants.identification.leftIndServoId)
         rightIndServo = CRServoEx(hardwareMap, IndexerConstants.identification.rightIndServoId)
-
-        indexerMotor.setInverted(IndexerConstants.configuration.isIndexMotorInverted)
-        indexerMotor.setRunMode(IndexerConstants.configuration.indexMotorMode)
-        indexerMotor.setZeroPowerBehavior(IndexerConstants.configuration.indexMotorZeroBeheavior)
 
         leftIndServo.setInverted(IndexerConstants.configuration.isLeftIndServoInverted)
         leftIndServo.setRunMode(IndexerConstants.configuration.leftIndServoMode)
@@ -30,19 +24,16 @@ class Indexer(hardwareMap: HardwareMap) {
     }
 
     fun enableIndexer () {
-        indexerMotor.set(1.0)
         leftIndServo.set(1.0)
         rightIndServo.set(1.0)
     }
 
     fun disableIndexer () {
-        indexerMotor.set(0.0)
         leftIndServo.set(0.0)
         rightIndServo.set(0.0)
     }
 
     fun reverseIndexer () {
-        indexerMotor.set(-1.0)
         leftIndServo.set(-1.0)
         rightIndServo.set(-1.0)
     }

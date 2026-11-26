@@ -7,8 +7,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.Robot
 import org.firstinspires.ftc.teamcode.TeleOpMode
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.Shooter
-import org.firstinspires.ftc.teamcode.subsystems.vision.Limelight
+import org.firstinspires.ftc.teamcode.subsystems.Vision.Limelight
 import org.firstinspires.ftc.teamcode.utils.Alliance
+import org.firstinspires.ftc.teamcode.utils.extensions.dpadLeft
+import org.firstinspires.ftc.teamcode.utils.extensions.dpadRight
+import org.firstinspires.ftc.teamcode.utils.extensions.dpadUp
+import org.firstinspires.ftc.teamcode.utils.extensions.onFalse
+import org.firstinspires.ftc.teamcode.utils.extensions.onTrue
 import kotlin.math.hypot
 
 @TeleOp(group = "TeleOp", name = "TeleOp - Red")
@@ -36,6 +41,12 @@ class TestTeleOp(hardwareMap: HardwareMap): TeleOpMode(Alliance.RED) {
 
     override fun run() {
         robot.run()
+        controller.dpadLeft()
+            .onTrue(hood.setManualPositionCMD())
+            .onFalse(hood.moveHoodDownPositionCMD())
+        controller.dpadRight()
+            .onTrue(shooter.shootWithManualRpmCmd())
+            .onFalse(shooter.stopShooterCMD())
         printTelemetry(telemetry)
     }
 

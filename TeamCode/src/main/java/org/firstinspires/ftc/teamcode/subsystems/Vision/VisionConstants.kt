@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.Vision
 import org.firstinspires.ftc.teamcode.utils.units.Angle
 import org.firstinspires.ftc.teamcode.utils.units.Distance
 
-object LimelightConstants {
+object VisionConstants {
 
     object Identification {
         val limelightId = "limelight"

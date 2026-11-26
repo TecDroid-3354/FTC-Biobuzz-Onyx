@@ -48,24 +48,18 @@ class Shooter (hardwareMap: HardwareMap) {
         interpolation.createLUT()
     }
 
-    fun shoot () {
-        shooterMotor1.velocity = 28 * 5000.0
-        shooterMotor2.velocity = 28 * 5000.0
-    }
-
     fun shootWithLimelight (distance: Double) {
         shooterMotor1.setVelocity(interpolation.get(distance))
         shooterMotor2.setVelocity(interpolation.get(distance))
     }
 
-    fun calibrateShooter(velocity: AngularVelocity) {
-        shooterMotor1.velocity = velocity.rps * 28
-        shooterMotor2.velocity = velocity.rps * 28
-    }
-
     fun stopShooter() {
         shooterMotor1.set(0.0)
         shooterMotor2.set(0.0)
+    }
+
+    fun shootWithManualRpm () {
+        shooterMotor1.set(ShooterConstants.Tunables.manualRPM)
     }
 
     fun getShooterMotor1Velocity(): AngularVelocity {
@@ -80,21 +74,16 @@ class Shooter (hardwareMap: HardwareMap) {
         return AngularVelocity.fromRps(((shooterMotor1.velocity/28)+(shooterMotor2.velocity/28))/2)
     }
 
-
-    fun shootCMD(): Command {
-        return InstantCommand({shoot()})
-    }
-
-    fun setShooterVelocityCMD(velocity: AngularVelocity): Command {
-        return RunCommand({calibrateShooter(velocity)})
-    }
-
     fun stopShooterCMD(): Command {
         return InstantCommand({stopShooter()})
     }
 
     fun shootWithLimelightCMD(distance: Double): Command {
         return InstantCommand({shootWithLimelight(distance)})
+    }
+
+    fun shootWithManualRpmCmd (): Command {
+        return InstantCommand({shootWithManualRpm()})
     }
 
 }

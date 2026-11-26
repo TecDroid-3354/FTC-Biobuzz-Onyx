@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.subsystems.Hood
 object HoodConstants {
 
     object Identification {
-        val hoodServoId = "shooterHoodServo"
+        val leftHoodServoId = "leftHoodServo"
+        val rightHoodServoId = "rightHoodServo"
     }
 
     object PhysicalLimits {
@@ -12,6 +13,11 @@ object HoodConstants {
         val maxAngle = 30.0 * gearRatio
     }
     object Configuration {
-        val isHoodServoInverted = false
+        val isLeftHoodServoInverted = false
+        val isRightHoodServoInverted = true
+    }
+    object Tunables {
+        @JvmField
+        var manualPosition = 45.0
     }
 }

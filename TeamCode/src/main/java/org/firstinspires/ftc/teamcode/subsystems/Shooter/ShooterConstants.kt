@@ -4,6 +4,7 @@ import com.bylazar.configurables.annotations.Configurable
 import com.qualcomm.robotcore.hardware.PIDCoefficients
 import com.seattlesolvers.solverslib.controller.wpilibcontroller.SimpleMotorFeedforward
 import com.seattlesolvers.solverslib.hardware.motors.Motor
+import org.firstinspires.ftc.teamcode.utils.units.AngularVelocity
 
 object ShooterConstants {
 
@@ -32,6 +33,8 @@ object ShooterConstants {
         var pidCoefficients = PIDCoefficients(1.0, 0.0, 0.0) //NEED TO UPDATE
         @JvmField
         var feedforward = SimpleMotorFeedforward(0.0,15.5) //NEED TO UPDATE
+        @JvmField
+        var manualRPM = AngularVelocity.fromRpm(1000.0).rpm
     }
 
 }

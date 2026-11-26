@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.vision
+package org.firstinspires.ftc.teamcode.subsystems.Vision
 
 import com.qualcomm.hardware.limelightvision.LLResult
 import com.qualcomm.hardware.limelightvision.Limelight3A
@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.seattlesolvers.solverslib.command.SubsystemBase
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.Robot
-import org.firstinspires.ftc.teamcode.subsystems.Vision.LimelightConstants
-import org.firstinspires.ftc.teamcode.utils.Alliance
 import org.firstinspires.ftc.teamcode.utils.units.Angle
 import org.firstinspires.ftc.teamcode.utils.units.Distance
 import java.util.function.Supplier
@@ -35,13 +33,13 @@ class Limelight(
     init {
         limelight = hardwareMap.get(
             Limelight3A::class.java,
-            LimelightConstants.Identification.limelightId
+            VisionConstants.Identification.limelightId
         )
 
         // Retrieves pipeline
-        limelight!!.pipelineSwitch(LimelightConstants.Configuration.aprilTagPipeline) // Gets the limelight pipeline
+        limelight!!.pipelineSwitch(VisionConstants.Configuration.aprilTagPipeline) // Gets the limelight pipeline
         // How many times per second the limelight receives data in seconds
-        limelight!!.setPollRateHz(LimelightConstants.Configuration.polRateHZ)
+        limelight!!.setPollRateHz(VisionConstants.Configuration.polRateHZ)
         // Starts the limelight's readings
         limelight!!.start()
     }
@@ -96,11 +94,11 @@ class Limelight(
             val targetOffsetAngle_Vertical = Angle.fromDegrees(llResult!!.getTy())
             // Needs to be in radians for tan() method
             val angleToGoalRadians =
-                Math.toRadians(LimelightConstants.Mecanical.pitch.degrees + targetOffsetAngle_Vertical.degrees)
+                Math.toRadians(VisionConstants.Mecanical.pitch.degrees + targetOffsetAngle_Vertical.degrees)
 
             // Calculated distance from limelight lens to goal (in inches)
             distanceFromLimelightToGoalInches =
-                Distance.fromInches(LimelightConstants.Mecanical.aprilTagHeight.inches - LimelightConstants.Mecanical.limelightHeight.inches) / tan(
+                Distance.fromInches(VisionConstants.Mecanical.aprilTagHeight.inches - VisionConstants.Mecanical.limelightHeight.inches) / tan(
                     angleToGoalRadians
                 )
             telemetry.addData(

@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Pata.Pata
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.Shooter
 import org.firstinspires.ftc.teamcode.subsystems.ShooterCover.ShooterCover
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.Mecanum
-import org.firstinspires.ftc.teamcode.subsystems.vision.Limelight
+import org.firstinspires.ftc.teamcode.subsystems.Vision.Limelight
 import org.firstinspires.ftc.teamcode.utils.Alliance
 import org.firstinspires.ftc.teamcode.utils.TecDroidRobot
 import org.firstinspires.ftc.teamcode.utils.autonomous.PoseStorage

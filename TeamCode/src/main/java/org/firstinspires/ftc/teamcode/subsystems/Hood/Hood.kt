@@ -11,14 +11,18 @@ import org.firstinspires.ftc.teamcode.utils.units.Distance
 
 class Hood(hardwareMap: HardwareMap) {
 
-    private val hoodServo: ServoEx
+    private val leftHoodServo: ServoEx
+
+    private val rightHoodServo: ServoEx
     val interpolation = InterpLUT()
     var distance = 10.0
 
     init {
-        hoodServo = ServoEx(hardwareMap, HoodConstants.Identification.hoodServoId)
+        leftHoodServo = ServoEx(hardwareMap, HoodConstants.Identification.leftHoodServoId)
+        rightHoodServo = ServoEx(hardwareMap, HoodConstants.Identification.rightHoodServoId)
 
-        hoodServo.setInverted(HoodConstants.Configuration.isHoodServoInverted)
+        leftHoodServo.setInverted(HoodConstants.Configuration.isLeftHoodServoInverted)
+        rightHoodServo.setInverted(HoodConstants.Configuration.isRightHoodServoInverted)
 
         interpolation.add(0.0,5.0)
         interpolation.add(1.0,6.0)
@@ -36,22 +40,34 @@ class Hood(hardwareMap: HardwareMap) {
 
     }
     fun moveHoodToPosition(distance: Double){
-        hoodServo.set(interpolation.get(distance))
+        leftHoodServo.set(interpolation.get(distance))
+        rightHoodServo.set(interpolation.get(distance))
     }
 
     fun getHoodsAngle (): Angle {
-        return Angle.fromDegrees(hoodServo.get())
+        return Angle.fromDegrees(((leftHoodServo.get())+(rightHoodServo.get()))/2)
     }
+
+    fun setManualPosition () {
+        leftHoodServo.set(HoodConstants.Tunables.manualPosition)
+        rightHoodServo.set(HoodConstants.Tunables.manualPosition)
+    }
+
 
     fun moveHoodToPositionCMD(distance: Double): Command {
         return InstantCommand({moveHoodToPosition(distance)})
 
     }
-        fun moveHoodDownPosition() {
-            hoodServo.set(HoodConstants.PhysicalLimits.minAngle)
-        }
+    fun moveHoodDownPosition() {
+        leftHoodServo.set(HoodConstants.PhysicalLimits.minAngle)
+        rightHoodServo.set(HoodConstants.PhysicalLimits.minAngle)
+    }
 
     fun moveHoodDownPositionCMD(): Command{
         return InstantCommand({moveHoodDownPosition()})
+    }
+
+    fun setManualPositionCMD(): Command {
+        return InstantCommand({setManualPosition()})
     }
 }
