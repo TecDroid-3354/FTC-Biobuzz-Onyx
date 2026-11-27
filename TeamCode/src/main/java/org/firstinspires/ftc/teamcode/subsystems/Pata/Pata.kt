@@ -8,22 +8,25 @@ import com.seattlesolvers.solverslib.hardware.servos.ServoEx
 
 class Pata(hardwareMap: HardwareMap) {
 
+    /*
+    * TODO(Conectar bien la patita derecha, la quite por que estaba mal conectada y no permitia hacer pruebas.)
+    * */
     private var leftPataServo = ServoEx(hardwareMap, PataConstants.identification.leftPataServoId)
-    private var rightPataServo = ServoEx(hardwareMap, PataConstants.identification.rightPataServoId)
+   // private var rightPataServo = ServoEx(hardwareMap, PataConstants.identification.rightPataServoId)
 
     init {
         leftPataServo.setInverted(PataConstants.configuration.isLeftPataServoInverted)
-        rightPataServo.setInverted(PataConstants.configuration.isRightPataServoInverted)
+        //rightPataServo.setInverted(PataConstants.configuration.isRightPataServoInverted)
     }
 
     fun lowerPata () {
         leftPataServo.set(90.0)
-        rightPataServo.set(90.0)
+      //  rightPataServo.set(90.0)
     }
 
     fun risePata () {
         leftPataServo.set(0.0)
-        rightPataServo.set(0.0)
+     //   rightPataServo.set(0.0)
     }
 
     fun lowerPataCMD (): Command {

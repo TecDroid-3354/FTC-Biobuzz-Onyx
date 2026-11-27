@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.Shooter
 
+import androidx.core.util.Supplier
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.seattlesolvers.solverslib.command.Command
 import com.seattlesolvers.solverslib.command.InstantCommand
@@ -7,83 +8,53 @@ import com.seattlesolvers.solverslib.command.RunCommand
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx
 import com.seattlesolvers.solverslib.util.InterpLUT
 import com.seattlesolvers.solverslib.util.get
+import org.firstinspires.ftc.teamcode.utils.devices.OpMotorEx
 import org.firstinspires.ftc.teamcode.utils.units.AngularVelocity
 import org.firstinspires.ftc.teamcode.utils.units.Distance
 
 class Shooter (hardwareMap: HardwareMap) {
 
-    private val shooterMotor1: MotorEx
-    private val shooterMotor2: MotorEx
-
-    private val interpolation: InterpLUT
+    private lateinit var shooterMotor1: OpMotorEx
+    private lateinit var shooterMotor2: OpMotorEx
 
 
     init {
-        shooterMotor1 = MotorEx(hardwareMap, ShooterConstants.identification.shooterMotor1Id)
-        shooterMotor2 = MotorEx(hardwareMap, ShooterConstants.identification.shooterMotor2Id)
+        shooterMotor1 = OpMotorEx(hardwareMap, ShooterConstants.identification.shooterMotor1Id)
+        shooterMotor2 = OpMotorEx(hardwareMap, ShooterConstants.identification.shooterMotor2Id)
 
-        shooterMotor1.setInverted(ShooterConstants.configuration.isShooterMotor1Inverted)
-        shooterMotor1.setRunMode(ShooterConstants.configuration.shooterMotor1Mode)
-        shooterMotor1.setZeroPowerBehavior(ShooterConstants.configuration.shooterMotor1ZeroBeheavior)
+        shooterMotor1.applyConfigurationAndResetEncoder(ShooterConstants.configuration.confShooter1)
 
-        shooterMotor2.setInverted(ShooterConstants.configuration.isShooterMotor2Inverted)
-        shooterMotor2.setRunMode(ShooterConstants.configuration.shooterMotor2Mode)
-        shooterMotor2.setZeroPowerBehavior(ShooterConstants.configuration.shooterMotor2ZeroBeheavior)
-
-        interpolation = InterpLUT()
-
-
-        interpolation.add(0.0,5.0)
-        interpolation.add(1.0,6.0)
-        interpolation.add(2.0,7.0)
-        interpolation.add(3.0,8.0)
-        interpolation.add(4.0,9.0)
-        interpolation.add(5.0,10.0)
-        interpolation.add(6.0,11.0)
-        interpolation.add(7.0,12.0)
-        interpolation.add(8.0,13.0)
-        interpolation.add(9.0,14.0)
-        interpolation.add(10.0,15.0)
-
-        interpolation.createLUT()
+        shooterMotor2.applyConfigurationAndResetEncoder(ShooterConstants.configuration.confShooter2)
     }
 
-    fun shootWithLimelight (distance: Double) {
-        shooterMotor1.setVelocity(interpolation.get(distance))
-        shooterMotor2.setVelocity(interpolation.get(distance))
+
+    private fun stopShooter() {
+        shooterMotor1.setVelocity(AngularVelocity.fromRpm(0.0))
+        shooterMotor2.setVelocity(AngularVelocity.fromRpm(0.0))
     }
 
-    fun stopShooter() {
-        shooterMotor1.set(0.0)
-        shooterMotor2.set(0.0)
+    private fun shootWithManualRPM () {
+        shooterMotor1.setVelocity(ShooterConstants.Tunables.manualRPM)
     }
 
-    fun shootWithManualRpm () {
-        shooterMotor1.set(ShooterConstants.Tunables.manualRPM)
+
+    private fun getShooterSpeed() : AngularVelocity{
+        return shooterMotor1.getVelocity().get()
     }
 
-    fun getShooterMotor1Velocity(): AngularVelocity {
-        return AngularVelocity.fromRps(shooterMotor1.velocity/28)//Change formula to solve gear ratio
+    fun isShooterAtTargetSpeed() : Boolean {
+        if(getShooterSpeed() >= ShooterConstants.Tunables.manualRPM){
+            return true
+        }else{
+            return false
+        }
     }
-
-    fun getShooterMotor2Velocity(): AngularVelocity {
-        return AngularVelocity.fromRps(shooterMotor2.velocity/28)//Change formula to solve gear ratio
+    fun shootWithManualRpmCMD (): Command {
+        return InstantCommand({shootWithManualRPM()})
     }
-
-    fun getShooterVelocity(): AngularVelocity {
-        return AngularVelocity.fromRps(((shooterMotor1.velocity/28)+(shooterMotor2.velocity/28))/2)
-    }
-
     fun stopShooterCMD(): Command {
         return InstantCommand({stopShooter()})
     }
 
-    fun shootWithLimelightCMD(distance: Double): Command {
-        return InstantCommand({shootWithLimelight(distance)})
-    }
-
-    fun shootWithManualRpmCmd (): Command {
-        return InstantCommand({shootWithManualRpm()})
-    }
 
 }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems.Indexer
 
 import com.seattlesolvers.solverslib.hardware.motors.CRServoEx
 import com.seattlesolvers.solverslib.hardware.motors.Motor
+import org.firstinspires.ftc.teamcode.utils.devices.configurations.servoControlModeConfiguration.ServoContinuousRotationModeConfiguration
 
 object IndexerConstants {
     object identification {
@@ -10,10 +11,15 @@ object IndexerConstants {
     }
 
     object configuration {
-        val isLeftIndServoInverted = true
-        val leftIndServoMode = CRServoEx.RunMode.RawPower
+        private val isLeftServoInverted = true
 
-        val isRightIndServoInverted = false
-        val rightIndServoMode = CRServoEx.RunMode.RawPower
+        val leftServoConfig = ServoContinuousRotationModeConfiguration()
+            .withInverted(isLeftServoInverted)
+            .withMaxPower(1.0)
+
+        private val isRightServoInverted = true
+        val rightServoConfig = ServoContinuousRotationModeConfiguration()
+            .withInverted(isRightServoInverted)
+            .withMaxPower(1.0)
     }
 }

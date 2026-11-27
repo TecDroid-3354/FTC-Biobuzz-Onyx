@@ -5,37 +5,36 @@ import com.seattlesolvers.solverslib.command.Command
 import com.seattlesolvers.solverslib.command.InstantCommand
 import com.seattlesolvers.solverslib.hardware.motors.CRServoEx
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx
+import org.firstinspires.ftc.teamcode.utils.devices.OpServoEx
 
 class Indexer(hardwareMap: HardwareMap) {
 
-    private val leftIndServo : CRServoEx
-    private val rightIndServo : CRServoEx
+    private val leftIndServo : OpServoEx
+    private val rightIndServo : OpServoEx
 
 
     init {
-        leftIndServo = CRServoEx(hardwareMap, IndexerConstants.identification.leftIndServoId)
-        rightIndServo = CRServoEx(hardwareMap, IndexerConstants.identification.rightIndServoId)
+        leftIndServo = OpServoEx(hardwareMap, IndexerConstants.identification.leftIndServoId)
+        rightIndServo = OpServoEx(hardwareMap, IndexerConstants.identification.rightIndServoId)
 
-        leftIndServo.setInverted(IndexerConstants.configuration.isLeftIndServoInverted)
-        leftIndServo.setRunMode(IndexerConstants.configuration.leftIndServoMode)
+        leftIndServo.applyConfiguration(IndexerConstants.configuration.leftServoConfig)
+        rightIndServo.applyConfiguration(IndexerConstants.configuration.rightServoConfig)
 
-        rightIndServo.setInverted(IndexerConstants.configuration.isRightIndServoInverted)
-        rightIndServo.setRunMode(IndexerConstants.configuration.rightIndServoMode)
     }
 
     fun enableIndexer () {
-        leftIndServo.set(1.0)
-        rightIndServo.set(1.0)
+        leftIndServo.setContinuousRotationOutput(-1.0)
+        rightIndServo.setContinuousRotationOutput(-1.0)
     }
 
     fun disableIndexer () {
-        leftIndServo.set(0.0)
-        rightIndServo.set(0.0)
+        leftIndServo.setContinuousRotationOutput(0.0)
+        rightIndServo.setContinuousRotationOutput(0.0)
     }
 
     fun reverseIndexer () {
-        leftIndServo.set(-1.0)
-        rightIndServo.set(-1.0)
+        leftIndServo.setContinuousRotationOutput(0.0)
+        rightIndServo.setContinuousRotationOutput(0.0)
     }
 
     fun enableIndexerCMD(): Command {

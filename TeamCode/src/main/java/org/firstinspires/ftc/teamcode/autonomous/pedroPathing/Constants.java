@@ -42,6 +42,9 @@ public class Constants {
 
     public static OTOSConfig localizerConfig = new OTOSConfig( c -> {
         c.name.set("otos");
+        c.angularScalar.set(1.0);
+        c.linearScalar.set(1.0);
+        c.offset.set(new Pose(0.0,0.0));
     });
 
     public static ForesightConfig foresightConfig = PedroPathing.INSTANCE.createForesightConfig(

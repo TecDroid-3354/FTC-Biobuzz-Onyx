@@ -18,6 +18,7 @@ object HoodConstants {
     }
     object Tunables {
         @JvmField
-        var manualPosition = 45.0
+        var manualPosition = 20.0
+
     }
 }

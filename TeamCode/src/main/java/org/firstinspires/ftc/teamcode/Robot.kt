@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode
 
-import Hood
+//import org.firstinspires.ftc.teamcode.subsystems.Hood.Hood
 import com.pedropathing.follower.Follower
 import com.pedropathing.math.Pose
 import com.pedropathing.paths.Path
@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.seattlesolvers.solverslib.command.Command
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup
 import com.seattlesolvers.solverslib.command.WaitCommand
+import com.seattlesolvers.solverslib.command.WaitUntilCommand
 import com.seattlesolvers.solverslib.gamepad.GamepadEx
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.Constants
@@ -17,9 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Indexer.Indexer
 import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake
 import org.firstinspires.ftc.teamcode.subsystems.Pata.Pata
 import org.firstinspires.ftc.teamcode.subsystems.Shooter.Shooter
-import org.firstinspires.ftc.teamcode.subsystems.ShooterCover.ShooterCover
 import org.firstinspires.ftc.teamcode.subsystems.mecanum.Mecanum
-import org.firstinspires.ftc.teamcode.subsystems.Vision.Limelight
 import org.firstinspires.ftc.teamcode.utils.Alliance
 import org.firstinspires.ftc.teamcode.utils.TecDroidRobot
 import org.firstinspires.ftc.teamcode.utils.autonomous.PoseStorage
@@ -30,8 +29,6 @@ import org.firstinspires.ftc.teamcode.utils.extensions.leftTrigger
 import org.firstinspires.ftc.teamcode.utils.extensions.onFalse
 import org.firstinspires.ftc.teamcode.utils.extensions.onTrue
 import org.firstinspires.ftc.teamcode.utils.extensions.rightTrigger
-import org.firstinspires.ftc.teamcode.utils.units.Angle
-import kotlin.arrayOf
 
 class Robot(
     private val alliance: Alliance,
@@ -47,23 +44,12 @@ class Robot(
     private lateinit var indexer : Indexer
     private lateinit var intake: Intake
     private lateinit var shooter: Shooter
-    private lateinit var shooterCover: ShooterCover
-    private lateinit var hood : Hood
+ //   private lateinit var hood : Hood
     private lateinit var feeder: Feeder
     private lateinit var pata: Pata
 
     private lateinit var otos : SparkFunOTOS
     private lateinit var drive: Mecanum
-
-    private lateinit var vision: Limelight
-
-    var allianceForAprilTags = when (alliance) {
-        Alliance.RED -> intArrayOf(30, 31, 32, 33, 34, 35, 36, 37)
-        Alliance.BLUE -> intArrayOf(38, 39, 40, 41, 42, 43, 44, 45)
-        else -> intArrayOf()
-    }
-
-
 
     init {
         subsystemInitialization()
@@ -77,14 +63,11 @@ class Robot(
         indexer = Indexer(hardwareMap)
         intake = Intake(hardwareMap)
         shooter = Shooter(hardwareMap)
-        shooterCover = ShooterCover(hardwareMap)
-        hood = Hood(hardwareMap)
+       // hood = Hood(hardwareMap)
         feeder = Feeder(hardwareMap)
         pata = Pata(hardwareMap)
 
         drive = Mecanum(follower, controller, alliance)
-        vision = Limelight (hardwareMap, telemetry) { Angle.fromDegrees(drive.getRotation().degrees) }
-
         otos = hardwareMap.get(SparkFunOTOS::class.java,"otos")
     }
 
@@ -98,58 +81,50 @@ class Robot(
         drive.defaultCommand = drive.driveFollowingDriverInput()
         // Build Commands:
 
+
+        //Sequence to move patita
         controller.dpadUp()
             .onTrue(pata.risePataCMD())
         controller.dpadDown()
             .onTrue(pata.lowerPataCMD())
 
+
+        //Sequence for Shoot ( I advice creating a Superstructure instead of what you are doing)
         controller.rightTrigger()
             .onTrue(SequentialCommandGroup(
-                hood.moveHoodToPositionCMD(vision.getDistanceToGoal(allianceForAprilTags).inches),
-                shooterCover.openShooterCoverCMD(),
-                WaitCommand(500),
-                shooter.shootWithLimelightCMD(vision.getDistanceToGoal(allianceForAprilTags).inches),
+                shooter.shootWithManualRpmCMD(),
+                indexer.enableIndexerCMD(),
+                WaitCommand(1000),
                 feeder.feedCMD(),
-                indexer.enableIndexerCMD()
+
             ))
             .onFalse(SequentialCommandGroup(
-                indexer.disableIndexerCMD(),
                 feeder.stopFeedingCMD(),
                 shooter.stopShooterCMD(),
-                WaitCommand(200),
-                shooterCover.closeShooterCoverCMD(),
-                hood.moveHoodDownPositionCMD()
+                intake.disableIntakeCMD()
             ))
 
+
+        //Sequence to Intake
         controller.leftTrigger()
-            .onTrue(SequentialCommandGroup(
-                indexer.enableIndexerCMD(),
-                intake.enableIntakeCMD()
-            ))
-            .onFalse(SequentialCommandGroup(
-                indexer.disableIndexerCMD(),
-                intake.disableIntakeCMD()
-            ))
+            .onTrue(
+                SequentialCommandGroup(
+                    indexer.enableIndexerCMD(),
+                    intake.enableIntakeCMD()
+                )
+            ).onFalse(
+                SequentialCommandGroup(
+                    indexer.disableIndexerCMD(),
+                    intake.disableIntakeCMD()
+                )
+            )
 
-        controller.leftBumper()
-            .onTrue(SequentialCommandGroup(
-                feeder.removeCMD(),
-                indexer.reverseIndexerCMD(),
-                intake.reverseIntakeCMD()
-            ))
-            .onFalse(SequentialCommandGroup(
-                feeder.stopFeedingCMD(),
-                indexer.disableIndexerCMD(),
-                intake.disableIntakeCMD()
-            ))
     }
 
     override fun preLoopTeleOp() {
         /**
          * Runs once before the main loop of the robot [loopTeleOp]
-         */
-        vision.start()
-    }
+         */ }
 
     /**
      * Runs periodically, useful for updating variables or configurables.
@@ -161,9 +136,7 @@ class Robot(
      * Initialize auto commands and set starting pose.
      */
     override fun initAuto(startingPose: Pose) {
-        drive.setPose(startingPose)
-        vision.start()
-    }
+        drive.setPose(startingPose) }
 
     /**
      * Runs once on the end of OpModes.
@@ -176,10 +149,6 @@ class Robot(
      * Runs inside the main loop of the robot. Print telemetry ONLY.
      */
     override fun printTelemetry() {
-        pTelemetry.addData("otos x", otos.position.x)
-        pTelemetry.addData("otos y", otos.position.y)
-        pTelemetry.addData("otos heading", otos.position.h)
-
         pTelemetry.update()
     }
 

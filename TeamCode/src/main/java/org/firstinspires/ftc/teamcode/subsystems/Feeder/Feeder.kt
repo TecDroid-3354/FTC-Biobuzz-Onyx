@@ -18,7 +18,7 @@ class Feeder (hardwareMap: HardwareMap) {
     }
 
     fun feed () {
-        feederMotor.set(1.0)
+        feederMotor.set(-1.0)
     }
 
     fun remove () {
