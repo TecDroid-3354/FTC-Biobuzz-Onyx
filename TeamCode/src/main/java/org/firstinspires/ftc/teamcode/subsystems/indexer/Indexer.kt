@@ -22,21 +22,48 @@ class Indexer(hardwareMap: HardwareMap) {
 
     }
 
-    fun enableIndexer () {
+    private fun enableIndexer () {
         leftIndServo.setContinuousRotationOutput(-1.0)
-        rightIndServo.setContinuousRotationOutput(-1.0)
+        rightIndServo.setContinuousRotationOutput(1.0)
     }
 
-    fun disableIndexer () {
+    private fun disableIndexer () {
         leftIndServo.setContinuousRotationOutput(0.0)
         rightIndServo.setContinuousRotationOutput(0.0)
     }
 
-    fun reverseIndexer () {
+    private fun reverseIndexer () {
         leftIndServo.setContinuousRotationOutput(0.0)
         rightIndServo.setContinuousRotationOutput(0.0)
     }
-
+    fun testServoRight() : Command {
+        return InstantCommand(
+            {
+                rightIndServo.setContinuousRotationOutput(1.0)
+            }
+        )
+    }
+    fun testServoLeft() : Command {
+        return InstantCommand(
+            {
+                leftIndServo.setContinuousRotationOutput(1.0)
+            }
+        )
+    }
+    fun inverseTestServoRight() : Command {
+        return InstantCommand(
+            {
+                rightIndServo.setContinuousRotationOutput(-1.0)
+            }
+        )
+    }
+    fun inverseTestServoLeft() : Command {
+        return InstantCommand(
+            {
+                leftIndServo.setContinuousRotationOutput(-1.0)
+            }
+        )
+    }
     fun enableIndexerCMD(): Command {
         return InstantCommand({enableIndexer()})
     }

@@ -22,6 +22,8 @@ import org.firstinspires.ftc.teamcode.subsystems.mecanum.Mecanum
 import org.firstinspires.ftc.teamcode.utils.Alliance
 import org.firstinspires.ftc.teamcode.utils.TecDroidRobot
 import org.firstinspires.ftc.teamcode.utils.autonomous.PoseStorage
+import org.firstinspires.ftc.teamcode.utils.extensions.a
+import org.firstinspires.ftc.teamcode.utils.extensions.b
 import org.firstinspires.ftc.teamcode.utils.extensions.dpadDown
 import org.firstinspires.ftc.teamcode.utils.extensions.dpadUp
 import org.firstinspires.ftc.teamcode.utils.extensions.leftBumper
@@ -29,6 +31,8 @@ import org.firstinspires.ftc.teamcode.utils.extensions.leftTrigger
 import org.firstinspires.ftc.teamcode.utils.extensions.onFalse
 import org.firstinspires.ftc.teamcode.utils.extensions.onTrue
 import org.firstinspires.ftc.teamcode.utils.extensions.rightTrigger
+import org.firstinspires.ftc.teamcode.utils.extensions.x
+import org.firstinspires.ftc.teamcode.utils.extensions.y
 
 class Robot(
     private val alliance: Alliance,
@@ -118,6 +122,13 @@ class Robot(
                     intake.disableIntakeCMD()
                 )
             )
+
+            controller.a().onTrue (indexer.testServoRight())
+        controller.y().onTrue (indexer.testServoLeft())
+
+        controller.b().onTrue(indexer.inverseTestServoLeft())
+        controller.x().onTrue(indexer.inverseTestServoRight())
+
 
     }
 
