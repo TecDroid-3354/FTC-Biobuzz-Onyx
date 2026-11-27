@@ -26,7 +26,7 @@ import java.util.Optional;
 
 /**
  * Pedro Pathing 3.0 constants. The values below are placeholders: run the AutoTune procedures in
- * {@link Tuning} (see https://pedropathing.com/docs/pathing/tuning) and paste the generated configs here.
+ * {} (see https://pedropathing.com/docs/pathing/tuning) and paste the generated configs here.
  * If you use a different drivetrain or localizer, swap the config classes and {@link #createFollower} to match.
  */
 public class Constants {
@@ -40,12 +40,9 @@ public class Constants {
             Optional.of(0.99)
     );
 
-    public static PinpointConfig localizerConfig = PedroPathing.INSTANCE.createPinpointConfig(
-            Optional.of(GoBildaPinpointDriver.EncoderDirection.FORWARD),
-            Optional.of(GoBildaPinpointDriver.EncoderDirection.FORWARD),
-            Optional.of(Distance.fromInches(3.225225613811823)),
-            Optional.of(Distance.fromInches(-6.087658499169537))
-    );
+    public static OTOSConfig localizerConfig = new OTOSConfig( c -> {
+        c.name.set("otos");
+    });
 
     public static ForesightConfig foresightConfig = PedroPathing.INSTANCE.createForesightConfig(
             Optional.of(LinearVelocity.fromInps(76.35614907285614)),
@@ -67,7 +64,7 @@ public class Constants {
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new Follower(
-                new PinpointLocalizer(hardwareMap, localizerConfig),
+                new OTOSLocalizer(hardwareMap, localizerConfig),
                 new Mecanum(hardwareMap, drivetrainConfig),
                 new Foresight(foresightConfig)
         );

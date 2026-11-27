@@ -14,8 +14,6 @@ import com.pedropathing.revhub.localizers.PinpointLocalizer
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.procedures.ForesightTuner
-import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.procedures.Tests
 import org.firstinspires.ftc.teamcode.utils.units.Distance
 import org.firstinspires.ftc.teamcode.utils.units.LinearVelocity
 import java.util.Optional
@@ -185,55 +183,5 @@ object PedroPathing {
         }
 
         return newConfig
-    }
-
-    fun createForesightTunerWithPinpoint(mecanumConfig: MecanumConfig, pinpointConfig: PinpointConfig): ForesightTuner {
-        return ForesightTuner(
-            { hardwareMap -> PinpointLocalizer(hardwareMap, pinpointConfig) },
-            { hardwareMap -> Mecanum(hardwareMap, mecanumConfig) }
-        )
-    }
-
-    fun createForesightTunerWithOTOS(mecanumConfig: MecanumConfig, otosConfig: OTOSConfig): ForesightTuner {
-        return ForesightTuner(
-            { hardwareMap -> OTOSLocalizer (hardwareMap, otosConfig) },
-            { hardwareMap -> Mecanum (hardwareMap, mecanumConfig) }
-        )
-    }
-
-    fun createMecanumOnlyTest(mecanumConfig: MecanumConfig): Tests {
-        return Tests({ hardwareMap -> Mecanum(hardwareMap, mecanumConfig) }, null, null)
-    }
-
-    fun createMecanumWithPinpointTest(mecanumConfig: MecanumConfig, pinpointConfig: PinpointConfig): Tests {
-        return Tests(
-            { hardwareMap -> Mecanum(hardwareMap, mecanumConfig) },
-            { hardwareMap -> PinpointLocalizer(hardwareMap, pinpointConfig) },
-            null
-        )
-    }
-
-    fun createMecanumWithOTOSTest(mecanumConfig: MecanumConfig, otosConfig: OTOSConfig): Tests {
-        return Tests(
-            { hardwareMap -> Mecanum(hardwareMap, mecanumConfig) },
-            { hardwareMap -> OTOSLocalizer(hardwareMap, otosConfig) },
-            null
-        )
-    }
-
-    fun createFullMecanumTestWithPinpoint(mecanumConfig: MecanumConfig, pinpointConfig: PinpointConfig, foresightConfig: ForesightConfig): Tests {
-        return Tests(
-            { hardwareMap -> Mecanum(hardwareMap, mecanumConfig) },
-            { hardwareMap -> PinpointLocalizer(hardwareMap, pinpointConfig) },
-            { Foresight(foresightConfig) }
-        )
-    }
-
-    fun createFullMecanumTestWithOTOS(mecanumConfig: MecanumConfig, otosConfig: OTOSConfig, foresightConfig: ForesightConfig): Tests {
-        return Tests(
-            { hardwareMap -> Mecanum(hardwareMap, mecanumConfig) },
-            { hardwareMap -> OTOSLocalizer(hardwareMap, otosConfig) },
-            { Foresight(foresightConfig) }
-        )
     }
 }

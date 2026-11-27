@@ -48,10 +48,6 @@ repositories {
     maven {
         url = "https://repo.dairy.foundation/releases"
     }
-
-    maven {
-        url = "https://repo.dairy.foundation/snapshots"
-    }
 }
 
 dependencies {
@@ -64,7 +60,7 @@ dependencies {
 
     // Pedro Pathing
     implementation 'com.pedropathing:revhub:3.0.2'
-    implementation 'com.pedropathing:tuning:1.0.2' // AutoTune (see Tuning.java)
+    //implementation 'com.pedropathing:tuning:1.0.2' // AutoTune (see Tuning.java)
 
     // Panels Dashboard
     implementation "com.bylazar:fullpanels:1.0.19"
