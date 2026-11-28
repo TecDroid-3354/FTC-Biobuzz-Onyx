@@ -123,11 +123,11 @@ class Robot(
                 )
             )
 
-            controller.a().onTrue (indexer.testServoRight())
-        controller.y().onTrue (indexer.testServoLeft())
+            controller.a().onTrue (indexer.testRightCMD())
+        controller.y().onTrue (indexer.testLeftCMD())
 
-        controller.b().onTrue(indexer.inverseTestServoLeft())
-        controller.x().onTrue(indexer.inverseTestServoRight())
+        controller.b().onTrue(indexer.inverseTestRightCMD())
+        controller.x().onTrue(indexer.inverseTestLeftCMD())
 
 
     }

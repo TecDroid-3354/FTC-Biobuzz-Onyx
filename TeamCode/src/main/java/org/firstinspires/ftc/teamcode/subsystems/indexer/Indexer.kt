@@ -5,65 +5,41 @@ import com.seattlesolvers.solverslib.command.Command
 import com.seattlesolvers.solverslib.command.InstantCommand
 import com.seattlesolvers.solverslib.hardware.motors.CRServoEx
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx
-import org.firstinspires.ftc.teamcode.utils.devices.OpServoEx
 
 class Indexer(hardwareMap: HardwareMap) {
 
-    private val leftIndServo : OpServoEx
-    private val rightIndServo : OpServoEx
+    private val leftIndServo : CRServoEx
+    private val rightIndServo : CRServoEx
 
 
     init {
-        leftIndServo = OpServoEx(hardwareMap, IndexerConstants.identification.leftIndServoId)
-        rightIndServo = OpServoEx(hardwareMap, IndexerConstants.identification.rightIndServoId)
+        leftIndServo = CRServoEx(hardwareMap, IndexerConstants.identification.leftIndServoId)
+        rightIndServo = CRServoEx(hardwareMap, IndexerConstants.identification.rightIndServoId)
 
-        leftIndServo.applyConfiguration(IndexerConstants.configuration.leftServoConfig)
-        rightIndServo.applyConfiguration(IndexerConstants.configuration.rightServoConfig)
+        leftIndServo.setInverted(IndexerConstants.configuration.isLeftIndServoInverted)
+        leftIndServo.setRunMode(IndexerConstants.configuration.leftIndServoMode)
+        leftIndServo.setPIDF(IndexerConstants.configuration.PIDF)
 
+        rightIndServo.setInverted(IndexerConstants.configuration.isRightIndServoInverted)
+        rightIndServo.setRunMode(IndexerConstants.configuration.rightIndServoMode)
+        rightIndServo.setPIDF(IndexerConstants.configuration.PIDF)
     }
 
     private fun enableIndexer () {
-        leftIndServo.setContinuousRotationOutput(-1.0)
-        rightIndServo.setContinuousRotationOutput(1.0)
+        leftIndServo.set(1.0)
+        rightIndServo.set(1.0)
     }
 
     private fun disableIndexer () {
-        leftIndServo.setContinuousRotationOutput(0.0)
-        rightIndServo.setContinuousRotationOutput(0.0)
+        leftIndServo.set(0.0)
+        rightIndServo.set(0.0)
     }
 
     private fun reverseIndexer () {
-        leftIndServo.setContinuousRotationOutput(0.0)
-        rightIndServo.setContinuousRotationOutput(0.0)
+        leftIndServo.set(-1.0)
+        rightIndServo.set(-1.0)
     }
-    fun testServoRight() : Command {
-        return InstantCommand(
-            {
-                rightIndServo.setContinuousRotationOutput(1.0)
-            }
-        )
-    }
-    fun testServoLeft() : Command {
-        return InstantCommand(
-            {
-                leftIndServo.setContinuousRotationOutput(1.0)
-            }
-        )
-    }
-    fun inverseTestServoRight() : Command {
-        return InstantCommand(
-            {
-                rightIndServo.setContinuousRotationOutput(-1.0)
-            }
-        )
-    }
-    fun inverseTestServoLeft() : Command {
-        return InstantCommand(
-            {
-                leftIndServo.setContinuousRotationOutput(-1.0)
-            }
-        )
-    }
+
     fun enableIndexerCMD(): Command {
         return InstantCommand({enableIndexer()})
     }
@@ -73,5 +49,28 @@ class Indexer(hardwareMap: HardwareMap) {
 
     fun reverseIndexerCMD(): Command {
         return InstantCommand({reverseIndexer()})
+    }
+
+    fun testRightCMD() : Command {
+        return InstantCommand(
+            {rightIndServo.set(1.0)}
+        )
+    }
+
+    fun testLeftCMD() : Command {
+        return InstantCommand(
+            {leftIndServo.set(1.0)}
+        )
+    }
+    fun inverseTestRightCMD() : Command {
+        return InstantCommand(
+            {rightIndServo.set(-1.0)}
+        )
+    }
+
+    fun inverseTestLeftCMD() : Command {
+        return InstantCommand(
+            {leftIndServo.set(-1.0)}
+        )
     }
 }
